@@ -1,2 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="vn.semicolon.filepicker" />
+    package="vn.semicolon.filepicker">
+
+    <application>
+        <activity android:name=".FilePicker" />
+        <activity android:name=".PreviewImageActivity" />
+    </application>
+</manifest>
