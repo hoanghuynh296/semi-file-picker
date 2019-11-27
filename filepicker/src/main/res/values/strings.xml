@@ -1,6 +1,8 @@
 <resources>
-    <string name="app_name">File Picker</string>
+    <string name="app_name" translatable="false">File Picker</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_cancel">Hủy</string>
+    <string name="text_no_file_selected">Chưa chọn</string>
+    <string name="button_done">Xong</string>
+    <string name="text_selected_count">Đã chọn: %d</string>
 </resources>

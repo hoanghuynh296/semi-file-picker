@@ -39,6 +39,7 @@
                 android:textColor="@android:color/white"
                 android:layout_height="wrap_content"/>
         <ImageView
+            android:visibility="gone"
                 android:background="?attr/selectableItemBackground"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
@@ -67,7 +68,7 @@
             android:layout_height="wrap_content">
         <vn.semicolon.base.widget.customview.SmartTextView
                 android:layout_width="wrap_content"
-                android:text="Hủy"
+                android:text="@string/button_cancel"
                 app:smtv_radius="@dimen/_4sdp"
                 app:smtv_borderWidth="0.5dp"
                 android:id="@+id/filePicker_cancel"
@@ -86,7 +87,7 @@
                 android:layout_height="wrap_content"/>
         <vn.semicolon.base.widget.customview.SmartTextView
                 android:layout_width="wrap_content"
-                android:text="Chưa chọn"
+                android:text="@string/text_no_file_selected"
                 android:id="@+id/filePicker_count"
                 android:layout_centerInParent="true"
                 android:gravity="center"
@@ -107,7 +108,7 @@
             android:paddingTop="@dimen/_6sdp"
             android:paddingEnd="@dimen/_16sdp"
             android:paddingBottom="@dimen/_6sdp"
-            android:text="Xong"
+            android:text="@string/button_done"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_12ssp"
             app:smtv_backgroundDisableColor="@android:color/darker_gray"

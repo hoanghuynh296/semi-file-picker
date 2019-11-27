@@ -139,7 +139,10 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
 
 
     override fun onItemsSelectChanged(size: Int) {
-        filePicker_count.text = if (size > 0) "Đã chọn $size" else "Chưa chọn"
+        filePicker_count.text = if (size > 0) getString(
+            R.string.text_selected_count,
+            size
+        ) else getString(R.string.text_no_file_selected)
         filePicker_submit.isEnabled = (size > 0 && size >= mMinSelect && size <= mMaxSelect)
     }
 
