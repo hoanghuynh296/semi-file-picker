@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    tools:context=".PreviewImageActivity">
+
+    <FrameLayout
+        android:id="@+id/previewImage_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/previewImage_image"
+            android:background="@android:color/darker_gray"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside" />
+    </FrameLayout>
+
+    <vn.semicolon.base.widget.customview.StateIconView
+        android:id="@+id/previewImage_back"
+        android:layout_width="@dimen/_36sdp"
+        android:layout_height="@dimen/_36sdp"
+        android:layout_margin="@dimen/_12sdp"
+        android:background="?attr/selectableItemBackground"
+        android:padding="@dimen/_6sdp"
+        android:src="@drawable/ic_arrow_back_black_24dp" />
+</RelativeLayout>

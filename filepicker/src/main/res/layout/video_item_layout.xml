@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="wrap_content"
+        android:id="@+id/videoItem_root"
+        android:layout_height="wrap_content"
+>
+    <ImageView
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:id="@+id/videoItem_video"
+            android:background="#202020"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_120sdp"/>
+    <ImageView
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_play_circle_outline_black_24dp"
+            android:scaleType="centerCrop"
+            android:id="@+id/videoItem_play"
+            android:padding="@dimen/_36sdp"
+            android:layout_width="@dimen/_160sdp"
+            android:layout_height="@dimen/_120sdp"/>
+
+    <vn.semicolon.base.widget.customview.StateTextView
+            app:smtv_fillColor="#70000000"
+            android:text="1"
+            android:gravity="center"
+            android:id="@+id/videoItem_selectedText"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_18ssp"
+            android:textStyle="bold"
+            android:layout_alignEnd="@+id/videoItem_video"
+            android:layout_alignTop="@+id/videoItem_video"
+            android:layout_alignBottom="@+id/videoItem_video"
+            android:layout_alignStart="@+id/videoItem_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    <CheckBox
+            android:id="@+id/videoItem_checkbox"
+            android:padding="@dimen/_12sdp"
+            android:buttonTint="@android:color/white"
+            android:layout_margin="@dimen/_6sdp"
+            android:layout_alignBottom="@+id/videoItem_video"
+            android:layout_alignEnd="@+id/videoItem_video"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"/>
+    <RadioButton
+            android:visibility="gone"
+            android:id="@+id/videoItem_radio"
+            android:padding="@dimen/_12sdp"
+            android:buttonTint="@android:color/white"
+            android:layout_margin="@dimen/_6sdp"
+            android:layout_alignBottom="@+id/videoItem_video"
+            android:layout_alignEnd="@+id/videoItem_video"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"/>
+</RelativeLayout>

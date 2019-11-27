@@ -1,0 +1,2 @@
+include ':app', ':filepicker'
+rootProject.name='Semi File Picker'

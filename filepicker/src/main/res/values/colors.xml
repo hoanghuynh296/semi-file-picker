@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- default themes -->
+    <color name="colorPrimary">#293C5C</color>
+    <color name="colorPrimaryLight">#748DB8</color>
+    <color name="colorPrimaryDark">#31343B</color>
+    <color name="colorPrimaryGradient">#303C4E</color>
+    <color name="colorPrimaryGradientLight">#979EAA</color>
+    <color name="colorAccent">#CC8B81</color>
+
+    <!-- 1st themes -->
+    <color name="theme1_colorPrimary">#979c77</color>
+    <color name="theme1_colorPrimaryLight">#ebc485</color>
+    <color name="theme1_colorPrimaryDark">#af7164</color>
+    <color name="theme1_colorAccent">#ebc485</color>
+
+    <!-- 2st themes -->
+    <color name="theme2_colorPrimary">#a79d8b</color>
+    <color name="theme2_colorPrimaryLight">#a79d8b</color>
+    <color name="theme2_colorPrimaryDark">#45413e</color>
+    <color name="theme2_colorAccent">#dab855</color>
+
+    <!-- 3st themes -->
+    <color name="theme3_colorPrimary">#f3cd6c</color>
+    <color name="theme3_colorPrimaryLight">#e7d9ca</color>
+    <color name="theme3_colorPrimaryDark">#ec7e66</color>
+    <color name="theme3_colorAccent">#e7d9ca</color>
+
+    <color name="colorZalo">#0080C8</color>
+    <color name="colorSubtitle">#AAA9A9</color>
+    <color name="colorDark">#101010</color>
+    <color name="colorWhiteBackground">#FAFAFA</color>
+    <color name="colorDisable">#D6D6D6</color>
+</resources>

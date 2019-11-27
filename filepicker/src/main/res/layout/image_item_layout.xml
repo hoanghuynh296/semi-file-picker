@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/imageItem_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/imageItem_image"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_centerInParent="true"
+        android:background="#202020"
+        android:scaleType="centerCrop" />
+
+    <vn.semicolon.base.widget.customview.StateTextView
+        android:id="@+id/imageItem_selectedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageItem_image"
+        android:layout_alignTop="@+id/imageItem_image"
+        android:layout_alignEnd="@+id/imageItem_image"
+        android:layout_alignBottom="@+id/imageItem_image"
+        android:gravity="center"
+        android:text="1"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_18ssp"
+        android:textStyle="bold"
+        app:smtv_fillColor="#70000000" />
+
+    <CheckBox
+        android:id="@+id/imageItem_checkbox"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_alignEnd="@+id/imageItem_image"
+        android:layout_alignBottom="@+id/imageItem_image"
+        android:layout_margin="@dimen/_6sdp"
+        android:buttonTint="@android:color/white"
+        android:padding="@dimen/_12sdp" />
+
+    <RadioButton
+        android:id="@+id/imageItem_radio"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_alignEnd="@+id/imageItem_image"
+        android:layout_alignBottom="@+id/imageItem_image"
+        android:layout_margin="@dimen/_6sdp"
+        android:buttonTint="@android:color/white"
+        android:padding="@dimen/_12sdp"
+        android:visibility="gone" />
+</RelativeLayout>
