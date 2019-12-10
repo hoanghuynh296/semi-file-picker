@@ -46,10 +46,19 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
     AlbumDialog.OnDialogVisibleChangedListener, OnItemClickListener<FileItemModel> {
 
     companion object {
-
         fun getResult(data: Intent?): Array<String> {
             return if (data == null) emptyArray()
             else data.getStringArrayExtra(RESULT)
+        }
+
+        fun getResultAsArray(data: Intent?): Array<String> {
+            return getResult(data)
+        }
+
+        fun getResultAsArrayList(data: Intent?): ArrayList<String> {
+            val result = ArrayList<String>()
+            result.addAll(getResult(data))
+            return result
         }
 
         @IntDef(TYPE_IMAGE, TYPE_AUDIO)

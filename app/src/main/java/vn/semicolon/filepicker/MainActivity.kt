@@ -11,6 +11,7 @@ internal class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         main_tv.setOnClickListener {
             FilePicker.Builder()
+                .maxSelect(5)
                 .typesOf(FilePicker.TYPE_IMAGE)
                 .start(this, 0)
         }

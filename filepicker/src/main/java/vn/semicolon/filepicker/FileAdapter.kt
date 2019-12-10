@@ -27,6 +27,9 @@ class FileAdapter(
         return result
     }
 
+    private val isMaximum: Boolean
+        get() = mSelectedItems.size == maxSelect
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -105,33 +108,35 @@ class FileAdapter(
 
                 itemView.videoItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.videoItem_checkbox.isPressed) {
-                        if (mSelectedItems.size == maxSelect) {
-                            itemView.videoItem_checkbox.isChecked = false
-                            Toast.makeText(
-                                itemView.context,
-                                "Tối đa $maxSelect",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@setOnCheckedChangeListener
-                        }
-
                         if (checked) {
-                            if (!mSelectedItems.contains(data)) {
+                            if (isMaximum) {
+                                itemView.videoItem_checkbox.isChecked = false
+                                Toast.makeText(
+                                    itemView.context,
+                                    "Tối đa $maxSelect",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@setOnCheckedChangeListener
+                            } else if (!mSelectedItems.contains(data)) {
                                 mSelectedItems.add(data)
                                 onItemSelectChanged(checked, mSelectedItems.indexOf(data) + 1)
                             }
                         } else {
                             if (mSelectedItems.contains(data)) {
-                                val index = mSelectedItems.indexOf(data)
-                                mSelectedItems.remove(data)
-                                onItemSelectChanged(checked, index + 1)
-                                notifyDataChanged(index)
+                                unselect(data)
                             }
                         }
                         notifyItemsSelectedChanged()
                     }
                 }
             }
+        }
+
+        private fun unselect(item: FileItemModel) {
+            val index = mSelectedItems.indexOf(item)
+            mSelectedItems.remove(item)
+            onItemSelectChanged(false, index + 1)
+            notifyDataChanged(index)
         }
 
         private fun notifyItemsSelectedChanged() {
@@ -184,18 +189,18 @@ class FileAdapter(
                 itemView.audioItem_checkbox.isChecked = mSelectedItems.contains(data)
                 itemView.audioItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.audioItem_checkbox.isPressed) {
-                        if (mSelectedItems.size == maxSelect) {
-                            itemView.audioItem_checkbox.isChecked = false
-                            Toast.makeText(
-                                itemView.context,
-                                "Tối đa $maxSelect",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@setOnCheckedChangeListener
-                        }
+
 
                         if (checked) {
-                            if (!mSelectedItems.contains(data)) {
+                            if (isMaximum) {
+                                itemView.audioItem_checkbox.isChecked = false
+                                Toast.makeText(
+                                    itemView.context,
+                                    "Tối đa $maxSelect",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@setOnCheckedChangeListener
+                            } else if (!mSelectedItems.contains(data)) {
                                 mSelectedItems.add(data)
                                 onItemSelectChanged(checked, mSelectedItems.indexOf(data) + 1)
                             }
@@ -279,18 +284,16 @@ class FileAdapter(
 
                 itemView.imageItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.imageItem_checkbox.isPressed) {
-                        if (mSelectedItems.size == maxSelect) {
-                            itemView.imageItem_checkbox.isChecked = false
-                            Toast.makeText(
-                                itemView.context,
-                                "Tối đa $maxSelect",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            return@setOnCheckedChangeListener
-                        }
-
                         if (checked) {
-                            if (!mSelectedItems.contains(data)) {
+                            if (isMaximum) {
+                                itemView.imageItem_checkbox.isChecked = false
+                                Toast.makeText(
+                                    itemView.context,
+                                    "Tối đa $maxSelect",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@setOnCheckedChangeListener
+                            } else if (!mSelectedItems.contains(data)) {
                                 mSelectedItems.add(data)
                                 onItemSelectChanged(checked, mSelectedItems.indexOf(data) + 1)
                             }
