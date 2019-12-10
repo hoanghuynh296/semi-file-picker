@@ -19,7 +19,7 @@ allprojects {
 Add the following dependency to your `build.gradle` file: 
 ```
 dependencies {
-     implementation 'com.github.hoanghuynh296:semi-file-picker:v0.0.1-beta'
+     implementation 'com.github.hoanghuynh296:semi-file-picker:v0.0.2-beta'
 }
 ```
 # Usage
