@@ -1,5 +1,7 @@
 package vn.semicolon.filepicker
 
+import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -251,7 +253,20 @@ class FileAdapter(
                     itemView.imageItem_radio.isChecked = false
                     itemView.imageItem_selectedText.visibility = View.GONE
                 }
-                itemView.imageItem_image.loadFromUrlAsThumbnail(data.path)
+                itemView.imageItem_image.loadFromUrlAsThumbnail(
+                    data.path,
+                    listener = object : ImageLoadListener {
+                        override fun onLoadFailed(e: Exception?) {
+                            Log.e("FilePicker", "Can't load ${data.path} with error below")
+                            Log.e("FilePicker", "Error ${e?.localizedMessage}")
+                            removeAt(adapterPosition)
+                        }
+
+                        override fun onLoadSuccess(drawable: Drawable?) {
+
+                        }
+
+                    })
 
                 itemView.imageItem_radio.setOnCheckedChangeListener { _, checked ->
                     if (itemView.imageItem_radio.isPressed) {

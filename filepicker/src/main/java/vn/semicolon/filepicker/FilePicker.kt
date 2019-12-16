@@ -348,8 +348,10 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
             .subscribe({
                 val arrPath = it
                 mAlbums.addAll(getAlbums(arrPath))
-                if (mAlbums.isNotEmpty())
+                if (mAlbums.isNotEmpty()) {
                     mAdapter?.addAll(mAlbums[0].items)
+                    filePicker_albums.text = mAlbums[0].name
+                }
             }, {
                 Log.e("initVideoPicker", it.localizedMessage)
             })
@@ -363,8 +365,10 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
             .subscribe({
                 val arrPath = it
                 mAlbums.addAll(getAlbums(arrPath))
-                if (mAlbums.isNotEmpty())
+                if (mAlbums.isNotEmpty()) {
                     mAdapter?.addAll(mAlbums[0].items)
+                    filePicker_albums.text = mAlbums[0].name
+                }
             }, {
 
             })
@@ -441,8 +445,10 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         fun addAlbum(albumName: String, @FileType type: Int, vararg filePath: String): Builder {
             val items = ArrayList<FileItemModel>(filePath.size)
             filePath.forEach {
-                val f = FileItemModel(path = it, type = type)
-                items.add(f)
+                if (it.isNotBlank()) {
+                    val f = FileItemModel(path = it, type = type)
+                    items.add(f)
+                }
             }
             mCustomAlbums.add(AlbumModel(name = albumName, items = items))
             return this
