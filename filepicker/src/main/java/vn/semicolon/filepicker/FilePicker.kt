@@ -2,7 +2,6 @@ package vn.semicolon.filepicker
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.Drawable
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.os.Bundle
@@ -12,32 +11,18 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.*
-import com.bumptech.glide.Glide
-import com.bumptech.glide.Priority
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.Target
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_file_picker.*
-import kotlinx.android.synthetic.main.audio_item_layout.view.*
-import kotlinx.android.synthetic.main.image_item_layout.view.*
-import kotlinx.android.synthetic.main.video_item_layout.view.*
-import vn.semicolon.base.widget.adapter.BaseAdapter
 import vn.semicolon.base.widget.adapter.OnItemClickListener
 import java.io.File
 
@@ -84,6 +69,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         private const val FILE_TYPES = "file_types"
         private const val CUSTOM_ALBUMS = "custom_albums"
         private const val COLUMN_COUNT = "column_count"
+        private const val DESCRIPTION = "description"
     }
 
     @FileType
@@ -233,6 +219,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         }
 
         mColumnCount = intent.getIntExtra(COLUMN_COUNT, mColumnCount)
+        filePicker_description.text = intent.getStringExtra(DESCRIPTION)
     }
 
 
@@ -413,6 +400,13 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         private var mColumnCount: Int = 3
         private var mImageSetting: ImageSetting? = null
         private var mCustomAlbums: ArrayList<AlbumModel> = ArrayList()
+        private var mDescription: String = ""
+
+        fun description(s: String): Builder {
+            mDescription = s
+            return this
+        }
+
         /**
          * @see FileType
          */
@@ -495,6 +489,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
             intent.putExtra(FILE_TYPES, mFileTypes.toIntArray())
             intent.putExtra(CUSTOM_ALBUMS, mCustomAlbums)
             intent.putExtra(COLUMN_COUNT, mColumnCount)
+            intent.putExtra(DESCRIPTION, mDescription)
         }
     }
 
