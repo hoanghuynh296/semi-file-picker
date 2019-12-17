@@ -285,6 +285,11 @@ class FileAdapter(
                         notifyItemsSelectedChanged()
                     }
                 }
+                itemView.imageItem_checkboxWrapper.setOnClickListener {
+                    itemView.imageItem_radio.isPressed = true
+                    itemView.imageItem_radio.performClick()
+                    itemView.imageItem_radio.isPressed = false
+                }
             } else {
                 if (mSelectedItems.contains(data)) {
                     itemView.imageItem_checkbox.isChecked = true
@@ -323,6 +328,11 @@ class FileAdapter(
                         notifyItemsSelectedChanged()
                     }
                 }
+                itemView.imageItem_checkboxWrapper.setOnClickListener {
+                    itemView.imageItem_checkbox.isPressed = true
+                    itemView.imageItem_checkbox.performClick()
+                    itemView.imageItem_checkbox.isPressed = false
+                }
             }
 
         }
@@ -332,7 +342,10 @@ class FileAdapter(
         }
 
         private fun onItemSelectChanged(isSelected: Boolean, number: Int) {
-            itemView.imageItem_checkbox.isChecked = isSelected
+            if (maxSelect == 1)
+                itemView.imageItem_radio.isChecked = isSelected
+            else
+                itemView.imageItem_checkbox.isChecked = isSelected
             if (isSelected)
                 itemView.imageItem_selectedText.text = number.toString()
             itemView.imageItem_selectedText.visibility = if (isSelected) View.VISIBLE else View.GONE

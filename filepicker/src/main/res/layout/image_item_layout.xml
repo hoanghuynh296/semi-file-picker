@@ -9,7 +9,6 @@
         android:id="@+id/imageItem_image"
         android:layout_width="@dimen/_160sdp"
         android:layout_height="@dimen/_120sdp"
-        android:layout_centerInParent="true"
         android:background="#202020"
         android:scaleType="centerCrop" />
 
@@ -28,24 +27,29 @@
         android:textStyle="bold"
         app:smtv_fillColor="#70000000" />
 
-    <CheckBox
-        android:id="@+id/imageItem_checkbox"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
+    <FrameLayout
+        android:id="@+id/imageItem_checkboxWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_46sdp"
         android:layout_alignEnd="@+id/imageItem_image"
-        android:layout_alignBottom="@+id/imageItem_image"
-        android:layout_margin="@dimen/_6sdp"
-        android:buttonTint="@android:color/white"
-        android:padding="@dimen/_12sdp" />
+        android:layout_alignBottom="@+id/imageItem_image">
 
-    <RadioButton
-        android:id="@+id/imageItem_radio"
-        android:layout_width="@dimen/_24sdp"
-        android:layout_height="@dimen/_24sdp"
-        android:layout_alignEnd="@+id/imageItem_image"
-        android:layout_alignBottom="@+id/imageItem_image"
-        android:layout_margin="@dimen/_6sdp"
-        android:buttonTint="@android:color/white"
-        android:padding="@dimen/_12sdp"
-        android:visibility="gone" />
+        <CheckBox
+            android:id="@+id/imageItem_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/_6sdp"
+            android:buttonTint="@android:color/white" />
+        <RadioButton
+            android:id="@+id/imageItem_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_margin="@dimen/_6sdp"
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
+    </FrameLayout>
+
+
 </RelativeLayout>
