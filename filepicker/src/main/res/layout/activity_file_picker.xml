@@ -50,7 +50,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackground"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorDisable"
             android:visibility="visible"
             tools:text="Chọn water mark" />
     </RelativeLayout>
