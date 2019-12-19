@@ -274,11 +274,11 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
             val arr = path.split(File.separator)
             return if (arr.size >= 2)
                 arr[arr.size - 2]
-            else "No name"
+            else getString(R.string.album_noname)
         }
 
         val data = ArrayMap<String, ArrayList<FileItemModel>>()
-        val allAlbum = AlbumModel("Tất cả", ArrayList())
+        val allAlbum = AlbumModel(getString(R.string.album_all), ArrayList())
         paths.forEach {
             val albumName = getAlbumName(it.path)
             allAlbum.items.add(it)

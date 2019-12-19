@@ -4,4 +4,6 @@
     <string name="text_no_file_selected">Please select</string>
     <string name="button_done">Done</string>
     <string name="text_selected_count">Selected: %d</string>
+    <string name="album_all">All</string>
+    <string name="album_noname">No name</string>
 </resources>

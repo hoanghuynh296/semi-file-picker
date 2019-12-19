@@ -25,7 +25,7 @@
             android:drawablePadding="@dimen/_12sdp"
             android:focusable="true"
             android:padding="@dimen/_12sdp"
-            android:text="Tất cả"
+            android:text="@string/album_all"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_14ssp"
             app:smtv_rippleColor="@android:color/white" />
