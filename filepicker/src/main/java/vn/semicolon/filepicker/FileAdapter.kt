@@ -259,7 +259,8 @@ class FileAdapter(
                         override fun onLoadFailed(e: Exception?) {
                             Log.e("FilePicker", "Can't load ${data.path} with error below")
                             Log.e("FilePicker", "Error ${e?.localizedMessage}")
-                            removeAt(adapterPosition)
+                            if (adapterPosition >= 0)
+                                removeAt(adapterPosition)
                         }
 
                         override fun onLoadSuccess(drawable: Drawable?) {
@@ -300,7 +301,21 @@ class FileAdapter(
                     itemView.imageItem_checkbox.isChecked = false
                     itemView.imageItem_selectedText.visibility = View.GONE
                 }
-                itemView.imageItem_image.loadFromUrl(data.path)
+                itemView.imageItem_image.loadFromUrlAsThumbnail(
+                    data.path,
+                    listener = object : ImageLoadListener {
+                        override fun onLoadFailed(e: Exception?) {
+                            Log.e("FilePicker", "Can't load ${data.path} with error below")
+                            Log.e("FilePicker", "Error ${e?.localizedMessage}")
+                            if (adapterPosition >= 0)
+                                removeAt(adapterPosition)
+                        }
+
+                        override fun onLoadSuccess(drawable: Drawable?) {
+
+                        }
+
+                    })
 
                 itemView.imageItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.imageItem_checkbox.isPressed) {

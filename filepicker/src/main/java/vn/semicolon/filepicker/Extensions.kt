@@ -1,6 +1,7 @@
 package vn.semicolon.filepicker
 
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -20,45 +21,52 @@ fun ImageView.loadFromUrl(
     errorResId: Int? = null,
     listener: ImageLoadListener? = null
 ) {
-    if (url == null) return
-    var request = RequestOptions()
-        .centerCrop()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .priority(Priority.HIGH)
-    if (centerCrop)
-        request = request.centerCrop()
-    if (placeHolderResId != null) request.placeholder(placeHolderResId)
-    if (errorResId != null) request.error(errorResId)
-    var g = Glide.with(context.applicationContext)
-        .load(url)
-        .apply(request)
-    if (requestOptions != null) {
-        g = g.apply(requestOptions)
+    try {
+        if (url == null) return
+        var request = RequestOptions()
+            .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .priority(Priority.HIGH)
+        if (centerCrop)
+            request = request.centerCrop()
+        if (placeHolderResId != null) request.placeholder(placeHolderResId)
+        if (errorResId != null) request.error(errorResId)
+        var g = Glide.with(context.applicationContext)
+            .load(url)
+            .apply(request)
+        if (requestOptions != null) {
+            g = g.apply(requestOptions)
+        }
+
+        g.listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                listener?.onLoadFailed(e)
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                listener?.onLoadSuccess(resource)
+                return false
+            }
+        })
+            .into(this)
+    } catch (e: Exception) {
+        Log.e("FilePicker", e.localizedMessage)
+        if (errorResId != null) {
+            setImageResource(errorResId)
+        }
     }
-
-    g.listener(object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            listener?.onLoadFailed(e)
-            return false
-        }
-
-        override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-        ): Boolean {
-            listener?.onLoadSuccess(resource)
-            return false
-        }
-    })
-        .into(this)
 
 }
 
@@ -73,48 +81,54 @@ fun ImageView.loadFromUrlAsThumbnail(
     centerCrop: Boolean = true,
     requestOptions: RequestOptions? = null,
     placeHolderResId: Int? = null,
-    errorResId: Int? = null,
+    errorResId: Int = R.drawable.error_image,
     listener: ImageLoadListener? = null
 ) {
-    if (url == null) return
-    var request = RequestOptions()
-        .diskCacheStrategy(DiskCacheStrategy.ALL)
-        .priority(Priority.HIGH)
-    if (centerCrop)
-        request = request.centerCrop()
-    if (placeHolderResId != null) request.placeholder(placeHolderResId)
-    if (errorResId != null) request.error(errorResId)
-    var g = Glide.with(context.applicationContext)
-        .load(url)
-        .thumbnail(0.1f)
-        .apply(request)
-    if (requestOptions != null) {
-        g = g.apply(requestOptions)
+    try {
+        if (url == null) return
+        var request = RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .priority(Priority.HIGH)
+        if (centerCrop)
+            request = request.centerCrop()
+        if (placeHolderResId != null)
+            request.placeholder(placeHolderResId)
+        request.error(errorResId)
+        var g = Glide.with(context.applicationContext)
+            .load(url)
+            .thumbnail(0.1f)
+            .apply(request)
+        if (requestOptions != null) {
+            g = g.apply(requestOptions)
+        }
+
+        g.listener(object : RequestListener<Drawable> {
+            override fun onLoadFailed(
+                e: GlideException?,
+                model: Any?,
+                target: Target<Drawable>?,
+                isFirstResource: Boolean
+            ): Boolean {
+                listener?.onLoadFailed(e)
+                return false
+            }
+
+            override fun onResourceReady(
+                resource: Drawable?,
+                model: Any?,
+                target: Target<Drawable>?,
+                dataSource: DataSource?,
+                isFirstResource: Boolean
+            ): Boolean {
+                listener?.onLoadSuccess(resource)
+                return false
+            }
+
+        })
+            .into(this)
+
+    } catch (e: Exception) {
+        Log.e("FilePicker", e.localizedMessage)
+        setImageResource(errorResId)
     }
-
-    g.listener(object : RequestListener<Drawable> {
-        override fun onLoadFailed(
-            e: GlideException?,
-            model: Any?,
-            target: Target<Drawable>?,
-            isFirstResource: Boolean
-        ): Boolean {
-            listener?.onLoadFailed(e)
-            return false
-        }
-
-        override fun onResourceReady(
-            resource: Drawable?,
-            model: Any?,
-            target: Target<Drawable>?,
-            dataSource: DataSource?,
-            isFirstResource: Boolean
-        ): Boolean {
-            listener?.onLoadSuccess(resource)
-            return false
-        }
-
-    })
-        .into(this)
-
 }
