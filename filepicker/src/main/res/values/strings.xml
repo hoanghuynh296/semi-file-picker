@@ -7,4 +7,6 @@
     <string name="text_selected_count">Đã chọn: %d</string>
     <string name="album_all">Tất cả</string>
     <string name="album_noname">No name</string>
+    <string name="maximum_error">Tối đa %d</string>
+
 </resources>

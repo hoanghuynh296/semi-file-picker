@@ -6,4 +6,5 @@
     <string name="text_selected_count">Selected: %d</string>
     <string name="album_all">All</string>
     <string name="album_noname">No name</string>
+    <string name="maximum_error">Maximum is %d</string>
 </resources>

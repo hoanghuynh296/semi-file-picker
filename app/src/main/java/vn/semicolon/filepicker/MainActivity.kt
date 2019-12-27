@@ -12,7 +12,6 @@ internal class MainActivity : AppCompatActivity() {
         main_tv.setOnClickListener {
             FilePicker.Builder()
                 .description("Chọn ảnh")
-                .maxSelect(5)
                 .typesOf(FilePicker.TYPE_IMAGE)
                 .start(this, 0)
         }

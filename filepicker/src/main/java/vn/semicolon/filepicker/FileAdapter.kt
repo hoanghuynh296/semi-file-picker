@@ -8,19 +8,44 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.audio_item_layout.view.*
 import kotlinx.android.synthetic.main.image_item_layout.view.*
 import kotlinx.android.synthetic.main.video_item_layout.view.*
-import vn.semicolon.base.widget.adapter.BaseAdapter
 import java.io.File
+
 
 /**
  * Adapter
  */
 class FileAdapter(
-    var callback: OnItemsSelectChanged,
-    var minSelect: Int = 1,
-    var maxSelect: Int = 1
-) :
-    BaseAdapter<FileItemModel>() {
-    private val mSelectedItems = ArrayList<FileItemModel>()
+    var callback: OnItemsSelectChanged
+) : SelectOnHoverAdapter<FileItemModel>() {
+
+    /**
+     * Not good for performance
+     * TODO: handle it
+     */
+    override fun onSelectChanged(from: Int, end: Int, selectedCount: Int) {
+        super.onSelectChanged(from, end, selectedCount)
+        for (i in from..end)
+            notifyItemChanged(i)
+        mSelectedItems.forEach {
+            val index = data.indexOf(it)
+            if (index !in from..end)
+                notifyItemChanged(index)
+        }
+        callback.onItemsSelectChanged(selectedCount)
+    }
+
+    override fun onOverMaxError(max: Int) {
+        super.onOverMaxError(max)
+        recyclerView?.context?.let {
+            Toast.makeText(
+                it,
+                it.getString(R.string.maximum_error, max),
+                Toast.LENGTH_LONG
+            ).show()
+        }
+
+    }
+
     fun getSelectedPaths(): ArrayList<String> {
         val result = ArrayList<String>(mSelectedItems.size)
         mSelectedItems.forEach {
@@ -28,9 +53,6 @@ class FileAdapter(
         }
         return result
     }
-
-    private val isMaximum: Boolean
-        get() = mSelectedItems.size == maxSelect
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -69,7 +91,7 @@ class FileAdapter(
                 itemView.videoItem_checkbox.visibility = View.GONE
                 itemView.videoItem_radio.visibility = View.VISIBLE
 
-                if (mSelectedItems.contains(data)) {
+                if (isItemSelected(data)) {
                     itemView.videoItem_radio.isChecked = true
                     itemView.videoItem_selectedText.text = "Đã chọn"
                     itemView.videoItem_selectedText.visibility = View.VISIBLE
@@ -82,7 +104,7 @@ class FileAdapter(
                 itemView.videoItem_radio.setOnCheckedChangeListener { _, checked ->
                     if (itemView.videoItem_radio.isPressed) {
                         if (checked) {
-                            if (!mSelectedItems.contains(data)) {
+                            if (!isItemSelected(data)) {
                                 itemView.videoItem_selectedText.visibility = View.VISIBLE
                                 itemView.videoItem_selectedText.text = "Đã chọn"
                                 if (mSelectedItems.isNotEmpty()) {
@@ -97,7 +119,7 @@ class FileAdapter(
                     }
                 }
             } else {
-                if (mSelectedItems.contains(data)) {
+                if (isItemSelected(data)) {
                     itemView.videoItem_checkbox.isChecked = true
                     itemView.videoItem_selectedText.text =
                         (mSelectedItems.indexOf(data) + 1).toString()
@@ -111,21 +133,16 @@ class FileAdapter(
                 itemView.videoItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.videoItem_checkbox.isPressed) {
                         if (checked) {
-                            if (isMaximum) {
+                            if (isFullSelect()) {
                                 itemView.videoItem_checkbox.isChecked = false
-                                Toast.makeText(
-                                    itemView.context,
-                                    "Tối đa $maxSelect",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                onOverMaxError(maxSelect)
                                 return@setOnCheckedChangeListener
-                            } else if (!mSelectedItems.contains(data)) {
-                                mSelectedItems.add(data)
-                                onItemSelectChanged(checked, mSelectedItems.indexOf(data) + 1)
+                            } else if (!isItemSelected(data)) {
+                                select(data)
                             }
                         } else {
-                            if (mSelectedItems.contains(data)) {
-                                unselect(data)
+                            if (isItemSelected(data)) {
+                                unSelect(data)
                             }
                         }
                         notifyItemsSelectedChanged()
@@ -134,30 +151,11 @@ class FileAdapter(
             }
         }
 
-        private fun unselect(item: FileItemModel) {
-            val index = mSelectedItems.indexOf(item)
-            mSelectedItems.remove(item)
-            onItemSelectChanged(false, index + 1)
-            notifyDataChanged(index)
-        }
 
         private fun notifyItemsSelectedChanged() {
             callback.onItemsSelectChanged(mSelectedItems.size)
         }
 
-        private fun onItemSelectChanged(isSelected: Boolean, number: Int) {
-            itemView.videoItem_checkbox.isChecked = isSelected
-            if (isSelected)
-                itemView.videoItem_selectedText.text = number.toString()
-            itemView.videoItem_selectedText.visibility = if (isSelected) View.VISIBLE else View.GONE
-        }
-
-        private fun notifyDataChanged(from: Int) {
-            for (i in from until mSelectedItems.size) {
-                val index = data.indexOf(mSelectedItems[i])
-                notifyItemChanged(index)
-            }
-        }
     }
 
     inner class AudioViewHolder(v: View) : BaseViewHolder<FileItemModel>(v) {
@@ -184,75 +182,39 @@ class FileAdapter(
                                 mSelectedItems.add(data)
                             }
                         }
-                        notifyItemsSelectedChanged()
                     }
                 }
             } else {
                 itemView.audioItem_checkbox.isChecked = mSelectedItems.contains(data)
                 itemView.audioItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.audioItem_checkbox.isPressed) {
-
-
                         if (checked) {
-                            if (isMaximum) {
+                            if (isFullSelect()) {
                                 itemView.audioItem_checkbox.isChecked = false
-                                Toast.makeText(
-                                    itemView.context,
-                                    "Tối đa $maxSelect",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                onOverMaxError(maxSelect)
                                 return@setOnCheckedChangeListener
                             } else if (!mSelectedItems.contains(data)) {
-                                mSelectedItems.add(data)
-                                onItemSelectChanged(checked, mSelectedItems.indexOf(data) + 1)
+                                select(data)
                             }
                         } else {
-                            if (mSelectedItems.contains(data)) {
-                                val index = mSelectedItems.indexOf(data)
-                                mSelectedItems.remove(data)
-                                onItemSelectChanged(checked, index + 1)
-                                notifyDataChanged(index)
+                            if (isItemSelected(data)) {
+                                unSelect(data)
                             }
                         }
-                        notifyItemsSelectedChanged()
                     }
                 }
             }
 
         }
-
-        private fun notifyItemsSelectedChanged() {
-            callback.onItemsSelectChanged(mSelectedItems.size)
-        }
-
-        private fun onItemSelectChanged(isSelected: Boolean, number: Int) {
-            itemView.audioItem_checkbox.isChecked = isSelected
-        }
-
-        private fun notifyDataChanged(from: Int) {
-            for (i in from until mSelectedItems.size) {
-                val index = data.indexOf(mSelectedItems[i])
-                notifyItemChanged(index)
-            }
-        }
     }
 
     inner class ImageViewHolder(v: View) : BaseViewHolder<FileItemModel>(v) {
         override fun bindData(data: FileItemModel) {
+            setSelectStateView(isItemSelected(data), mSelectedItems.indexOf(data) + 1)
             // init single choice
             if (maxSelect == 1) {
-
                 itemView.imageItem_checkbox.visibility = View.GONE
                 itemView.imageItem_radio.visibility = View.VISIBLE
-
-                if (mSelectedItems.contains(data)) {
-                    itemView.imageItem_radio.isChecked = true
-                    itemView.imageItem_selectedText.text = "Đã chọn"
-                    itemView.imageItem_selectedText.visibility = View.VISIBLE
-                } else {
-                    itemView.imageItem_radio.isChecked = false
-                    itemView.imageItem_selectedText.visibility = View.GONE
-                }
                 itemView.imageItem_image.loadFromUrlAsThumbnail(
                     data.path,
                     listener = object : ImageLoadListener {
@@ -272,18 +234,13 @@ class FileAdapter(
                 itemView.imageItem_radio.setOnCheckedChangeListener { _, checked ->
                     if (itemView.imageItem_radio.isPressed) {
                         if (checked) {
-                            if (!mSelectedItems.contains(data)) {
-                                itemView.imageItem_selectedText.visibility = View.VISIBLE
-                                itemView.imageItem_selectedText.text = "Đã chọn"
+                            if (!isItemSelected(data)) {
                                 if (mSelectedItems.isNotEmpty()) {
-                                    val old = mSelectedItems[0]
-                                    mSelectedItems.clear()
-                                    notifyItemChanged(this@FileAdapter.data.indexOf(old))
+                                    unSelect(0)
                                 }
-                                mSelectedItems.add(data)
+                                select(data)
                             }
                         }
-                        notifyItemsSelectedChanged()
                     }
                 }
                 itemView.imageItem_checkboxWrapper.setOnClickListener {
@@ -292,15 +249,6 @@ class FileAdapter(
                     itemView.imageItem_radio.isPressed = false
                 }
             } else {
-                if (mSelectedItems.contains(data)) {
-                    itemView.imageItem_checkbox.isChecked = true
-                    itemView.imageItem_selectedText.text =
-                        (mSelectedItems.indexOf(data) + 1).toString()
-                    itemView.imageItem_selectedText.visibility = View.VISIBLE
-                } else {
-                    itemView.imageItem_checkbox.isChecked = false
-                    itemView.imageItem_selectedText.visibility = View.GONE
-                }
                 itemView.imageItem_image.loadFromUrlAsThumbnail(
                     data.path,
                     listener = object : ImageLoadListener {
@@ -320,27 +268,18 @@ class FileAdapter(
                 itemView.imageItem_checkbox.setOnCheckedChangeListener { _, checked ->
                     if (itemView.imageItem_checkbox.isPressed) {
                         if (checked) {
-                            if (isMaximum) {
+                            if (isFullSelect()) {
                                 itemView.imageItem_checkbox.isChecked = false
-                                Toast.makeText(
-                                    itemView.context,
-                                    "Tối đa $maxSelect",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                onOverMaxError(maxSelect)
                                 return@setOnCheckedChangeListener
-                            } else if (!mSelectedItems.contains(data)) {
-                                mSelectedItems.add(data)
-                                onItemSelectChanged(checked, mSelectedItems.indexOf(data) + 1)
+                            } else if (!isItemSelected(data)) {
+                                select(data)
                             }
                         } else {
-                            if (mSelectedItems.contains(data)) {
-                                val index = mSelectedItems.indexOf(data)
-                                mSelectedItems.remove(data)
-                                onItemSelectChanged(checked, index + 1)
-                                notifyDataChanged(index)
+                            if (isItemSelected(data)) {
+                                unSelect(data)
                             }
                         }
-                        notifyItemsSelectedChanged()
                     }
                 }
                 itemView.imageItem_checkboxWrapper.setOnClickListener {
@@ -352,24 +291,25 @@ class FileAdapter(
 
         }
 
-        private fun notifyItemsSelectedChanged() {
-            callback.onItemsSelectChanged(mSelectedItems.size)
-        }
-
-        private fun onItemSelectChanged(isSelected: Boolean, number: Int) {
-            if (maxSelect == 1)
-                itemView.imageItem_radio.isChecked = isSelected
-            else
-                itemView.imageItem_checkbox.isChecked = isSelected
-            if (isSelected)
-                itemView.imageItem_selectedText.text = number.toString()
-            itemView.imageItem_selectedText.visibility = if (isSelected) View.VISIBLE else View.GONE
-        }
-
-        private fun notifyDataChanged(from: Int) {
-            for (i in from until mSelectedItems.size) {
-                val index = data.indexOf(mSelectedItems[i])
-                notifyItemChanged(index)
+        private fun setSelectStateView(isSelected: Boolean, number: Int) {
+            if (maxSelect == 1) {
+                if (isSelected) {
+                    itemView.imageItem_radio.isChecked = true
+                    itemView.imageItem_selectedText.text = "Đã chọn"
+                    itemView.imageItem_selectedText.visibility = View.VISIBLE
+                } else {
+                    itemView.imageItem_radio.isChecked = false
+                    itemView.imageItem_selectedText.visibility = View.GONE
+                }
+            } else {
+                if (isSelected) {
+                    itemView.imageItem_checkbox.isChecked = true
+                    itemView.imageItem_selectedText.text = "$number"
+                    itemView.imageItem_selectedText.visibility = View.VISIBLE
+                } else {
+                    itemView.imageItem_checkbox.isChecked = false
+                    itemView.imageItem_selectedText.visibility = View.GONE
+                }
             }
         }
     }

@@ -16,7 +16,10 @@ import androidx.annotation.ColorInt
 import androidx.annotation.IntDef
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.*
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -74,7 +77,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
 
     @FileType
     private var mFileTypes: HashSet<Int> = HashSet(TYPE_IMAGE)
-    private var mMaxSelect: Int = 1
+    private var mMaxSelect: Int = Int.MAX_VALUE
     private var mMinSelect: Int = 1
     private var mColumnCount: Int = 3
     private var mImageSetting: ImageSetting? = null
@@ -151,7 +154,10 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
     private fun initUI() {
         (filePicker_data.itemAnimator as SimpleItemAnimator).supportsChangeAnimations =
             false
-        mAdapter = FileAdapter(this, mMinSelect, mMaxSelect)
+        mAdapter = FileAdapter(this).apply {
+            this.maxSelect = mMaxSelect
+            this.minSelect = mMinSelect
+        }
         mAdapter!!.setOnItemClickListener(this)
         filePicker_data.adapter = mAdapter
         initPicker(mFileTypes)
@@ -241,7 +247,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         }
 
         fun getGridLayoutManager(): RecyclerView.LayoutManager {
-            val lm = GridLayoutManager(this@FilePicker, mColumnCount)
+            val lm = ScrollGridLayoutManager(this@FilePicker, mColumnCount)
             return lm
         }
 
@@ -400,7 +406,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         @FileType
         private var mFileTypes: HashSet<Int> = HashSet(TYPE_IMAGE)
         private var mMinSelect: Int = 1
-        private var mMaxSelect: Int = 1
+        private var mMaxSelect: Int = Int.MAX_VALUE
         private var mColumnCount: Int = 3
         private var mImageSetting: ImageSetting? = null
         private var mCustomAlbums: ArrayList<AlbumModel> = ArrayList()
