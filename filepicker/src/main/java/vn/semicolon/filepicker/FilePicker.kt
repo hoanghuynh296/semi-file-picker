@@ -27,6 +27,8 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.parcel.Parcelize
 import kotlinx.android.synthetic.main.activity_file_picker.*
 import vn.semicolon.base.widget.adapter.OnItemClickListener
+import vn.semicolon.filepicker.data.UserGuideInfo
+import vn.semicolon.filepicker.utils.UserGuideUtils
 import java.io.File
 
 class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
@@ -103,6 +105,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         PreviewImageActivity.start(this, path)
     }
 
+    private val mUserGuideInfo: UserGuideInfo by lazy { UserGuideInfo(this) }
     private var mMediaPlayer: MediaPlayer? = null
     private var mLasPath: String? = null
     private fun previewVideo(path: String) {}
@@ -173,6 +176,16 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
         }
         filePicker_albums.setOnClickListener {
             showOrDismissAlbumDialog()
+        }
+    }
+
+    private val isSelectMultipleMode
+        get() = mMaxSelect > 1
+
+    private fun showUserGuideIfNeed() {
+        if (isSelectMultipleMode && mUserGuideInfo.isUseFirstTime()) {
+            UserGuideUtils.showSwipeToSelect(this)
+            mUserGuideInfo.setUseFirstTime(false)
         }
     }
 
@@ -365,6 +378,7 @@ class FilePicker : AppCompatActivity(), FileAdapter.OnItemsSelectChanged,
     }
 
     private fun initImagePicker() {
+        showUserGuideIfNeed()
         initRecyclerDisplay(filePicker_data, TYPE_GRID)
         val dis = getAllImagePath().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

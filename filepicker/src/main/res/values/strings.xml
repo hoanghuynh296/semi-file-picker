@@ -8,5 +8,6 @@
     <string name="album_all">Tất cả</string>
     <string name="album_noname">No name</string>
     <string name="maximum_error">Tối đa %d</string>
+    <string name="user_guide_swipe_to_select_multiple">Swipe horizontally to select multiple</string>
 
 </resources>
