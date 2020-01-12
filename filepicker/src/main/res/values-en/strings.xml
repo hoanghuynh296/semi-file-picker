@@ -7,5 +7,5 @@
     <string name="album_all">All</string>
     <string name="album_noname">No name</string>
     <string name="maximum_error">Maximum is %d</string>
-    <string name="user_guide_swipe_to_select_multiple">Swipe horizontal </string>
+    <string name="user_guide_swipe_to_select_multiple">Swipe horizontally to select multiple</string>
 </resources>
