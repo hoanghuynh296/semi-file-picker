@@ -2,8 +2,6 @@ package vn.semicolon.filepicker
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
-import android.media.ExifInterface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -13,20 +11,20 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_preview_image.*
 import vn.semicolon.filepicker.ImageUtils.getSize
-import java.io.File
-import java.io.FileNotFoundException
 
 
-internal class PreviewImageActivity : AppCompatActivity() {
+class PreviewImageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_preview_image)
-        val path = intent.getStringExtra("data")
-        mScaleGestureDetector = ScaleGestureDetector(this, ScaleListener((previewImage_image)))
+        val path: String? = intent.getStringExtra("data")
+
+        if (path.isNullOrBlank()) finish()
+
         previewImage_container.post {
             previewImage_container.let {
-                val size = getResponsiveSize(path, it.width, it.height)
+                val size = getResponsiveSize(path!!, it.width, it.height)
                 val lp = FrameLayout.LayoutParams(size.first, size.second)
                 lp.gravity = Gravity.CENTER
                 previewImage_image.layoutParams = lp
@@ -46,30 +44,12 @@ internal class PreviewImageActivity : AppCompatActivity() {
         }
     }
 
-    override fun onTouchEvent(motionEvent: MotionEvent): Boolean {
-        mScaleGestureDetector?.onTouchEvent(motionEvent)
-        return true
-    }
 
-    private var mScaleGestureDetector: ScaleGestureDetector? = null
     override fun onDestroy() {
         super.onDestroy()
-        mScaleGestureDetector = null
     }
 
-    private class ScaleListener(var img: ImageView, var scaleFactor: Float = 1.0f) :
-        ScaleGestureDetector.SimpleOnScaleGestureListener() {
-        override fun onScale(scaleGestureDetector: ScaleGestureDetector): Boolean {
-            scaleFactor *= scaleGestureDetector.scaleFactor
-            scaleFactor = Math.max(
-                1.0f,
-                Math.min(scaleFactor, 10.0f)
-            )
-            img.scaleX = scaleFactor
-            img.scaleY = scaleFactor
-            return true
-        }
-    }
+
     private fun getResponsiveSize(path: String, maxWidth: Int, maxHeight: Int): Pair<Int, Int> {
         val size = getSize(path)
         return getResponsiveSize(size.first, size.second, maxWidth, maxHeight)

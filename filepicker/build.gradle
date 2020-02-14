@@ -49,4 +49,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
     implementation 'com.github.hoanghuynh296:semi-widget:v0.0.3-alpha'
+
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }
