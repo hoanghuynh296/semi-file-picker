@@ -2,6 +2,8 @@ package vn.semicolon.filepicker
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
@@ -9,6 +11,9 @@ import android.view.ScaleGestureDetector
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.activity_preview_image.*
 import vn.semicolon.filepicker.ImageUtils.getSize
 
@@ -23,13 +28,35 @@ class PreviewImageActivity : AppCompatActivity() {
         if (path.isNullOrBlank()) finish()
 
         previewImage_container.post {
-            previewImage_container.let {
-                val size = getResponsiveSize(path!!, it.width, it.height)
-                val lp = FrameLayout.LayoutParams(size.first, size.second)
-                lp.gravity = Gravity.CENTER
-                previewImage_image.layoutParams = lp
-                previewImage_image.loadFromUrl(path, false)
-            }
+            Glide.with(this)
+                .asBitmap()
+                .load(path)
+                .into(object : CustomTarget<Bitmap>() {
+                    override fun onResourceReady(
+                        resource: Bitmap,
+                        transition: Transition<in Bitmap>?
+                    ) {
+                        val size = getResponsiveSize(
+                            resource.width,
+                            resource.height,
+                            previewImage_image.width,
+                            previewImage_image.height
+                        )
+                        val lp = FrameLayout.LayoutParams(size.first, size.second)
+                        lp.gravity = Gravity.CENTER
+                        previewImage_image.layoutParams = lp
+                        val bitmap =
+                            Bitmap.createScaledBitmap(resource, size.first, size.second, false)
+                        previewImage_image.setImageBitmap(bitmap)
+                    }
+
+                    override fun onLoadCleared(placeholder: Drawable?) {
+                        // this is called when imageView is cleared on lifecycle call or for
+                        // some other reason.
+                        // if you are referencing the bitmap somewhere else too other than this imageView
+                        // clear it here as you can no longer have the bitmap
+                    }
+                })
         }
         previewImage_back.setOnClickListener {
             finish()
@@ -42,11 +69,6 @@ class PreviewImageActivity : AppCompatActivity() {
             intent.putExtra("data", path)
             context.startActivity(intent)
         }
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
 
