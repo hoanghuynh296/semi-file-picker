@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import android.webkit.URLUtil
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.activity_preview_image.*
 import vn.semicolon.filepicker.ImageUtils.getSize
+import java.net.URL
 
 
 class PreviewImageActivity : AppCompatActivity() {
@@ -25,38 +27,51 @@ class PreviewImageActivity : AppCompatActivity() {
         setContentView(R.layout.activity_preview_image)
         val path: String? = intent.getStringExtra("data")
 
-        if (path.isNullOrBlank()) finish()
+        if (path.isNullOrBlank()) {
+            finish()
+            return
+        }
 
         previewImage_container.post {
-            Glide.with(this)
-                .asBitmap()
-                .load(path)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        val size = getResponsiveSize(
-                            resource.width,
-                            resource.height,
-                            previewImage_image.width,
-                            previewImage_image.height
-                        )
-                        val lp = FrameLayout.LayoutParams(size.first, size.second)
-                        lp.gravity = Gravity.CENTER
-                        previewImage_image.layoutParams = lp
-                        val bitmap =
-                            Bitmap.createScaledBitmap(resource, size.first, size.second, false)
-                        previewImage_image.setImageBitmap(bitmap)
-                    }
+            if (URLUtil.isHttpUrl(path) || URLUtil.isHttpsUrl(path))
+                Glide.with(this)
+                    .asBitmap()
+                    .load(path)
+                    .into(object : CustomTarget<Bitmap>() {
+                        override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: Transition<in Bitmap>?
+                        ) {
+                            val size = getResponsiveSize(
+                                resource.width,
+                                resource.height,
+                                previewImage_image.width,
+                                previewImage_image.height
+                            )
+                            val lp = FrameLayout.LayoutParams(size.first, size.second)
+                            lp.gravity = Gravity.CENTER
+                            previewImage_image.layoutParams = lp
+                            val bitmap =
+                                Bitmap.createScaledBitmap(resource, size.first, size.second, false)
+                            previewImage_image.setImageBitmap(bitmap)
+                        }
 
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        // this is called when imageView is cleared on lifecycle call or for
-                        // some other reason.
-                        // if you are referencing the bitmap somewhere else too other than this imageView
-                        // clear it here as you can no longer have the bitmap
-                    }
-                })
+                        override fun onLoadCleared(placeholder: Drawable?) {
+                            // this is called when imageView is cleared on lifecycle call or for
+                            // some other reason.
+                            // if you are referencing the bitmap somewhere else too other than this imageView
+                            // clear it here as you can no longer have the bitmap
+                        }
+                    })
+            else {
+                previewImage_container.let {
+                    val size = getResponsiveSize(path!!, it.width, it.height)
+                    val lp = FrameLayout.LayoutParams(size.first, size.second)
+                    lp.gravity = Gravity.CENTER
+                    previewImage_image.layoutParams = lp
+                    previewImage_image.loadFromUrl(path, false)
+                }
+            }
         }
         previewImage_back.setOnClickListener {
             finish()

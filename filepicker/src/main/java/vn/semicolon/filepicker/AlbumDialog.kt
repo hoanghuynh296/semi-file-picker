@@ -40,7 +40,10 @@ internal class AlbumDialog(
     var callback: OnAlbumSelectedListener?
 ) : LifecycleObserver {
 
-    private var popup: PopupWindow = PopupWindow(parent?.context)
+    private var popup: PopupWindow = PopupWindow(parent?.context).apply {
+        this.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        this.width = ViewGroup.LayoutParams.WRAP_CONTENT
+    }
     private var recyclerView: RecyclerView
     private var archor: View? = null
     private var isLastShow: Boolean = false
