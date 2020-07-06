@@ -5,6 +5,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
 import io.reactivex.Flowable
+import java.io.File
 
 object SemiFileManager {
     object FileType {
@@ -26,15 +27,15 @@ object SemiFileManager {
     }
 
     fun getImagesFilePath(cr: ContentResolver): Flowable<List<FileItemModel>> {
-        return getFilePath(SemiFileManager.FileType.IMAGE, cr)
+        return getFilePath(FileType.IMAGE, cr)
     }
 
     fun getAudiosFilePath(cr: ContentResolver): Flowable<List<FileItemModel>> {
-        return getFilePath(SemiFileManager.FileType.AUDIO, cr)
+        return getFilePath(FileType.AUDIO, cr)
     }
 
     fun getVideosFilePath(cr: ContentResolver): Flowable<List<FileItemModel>> {
-        return getFilePath(SemiFileManager.FileType.VIDEO, cr)
+        return getFilePath(FileType.VIDEO, cr)
     }
 
     private fun getFilePath(
@@ -73,8 +74,10 @@ object SemiFileManager {
                 cursor.moveToPosition(i)
                 val dataColumnIndex = cursor.getColumnIndex(columnIndex)
                 //Store the path of the image
-                resultItem.add(FileItemModel(cursor.getString(dataColumnIndex), type))
-                Log.i("PATH", resultItem[i].path)
+                val path = cursor.getString(dataColumnIndex)
+                val exist = File(path).exists()
+                if (exist)
+                    resultItem.add(FileItemModel(path, type))
             }
             cursor.close()
             Flowable.just(resultItem.reversed())
